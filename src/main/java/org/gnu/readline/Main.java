@@ -1,8 +1,5 @@
 package org.gnu.readline;
 
-import com.sun.jna.Callback;
-import com.sun.jna.CallbackReferenceHack;
-
 public class Main {
   public static void main(String[] args) {
     Readline.using_history();
@@ -10,7 +7,7 @@ public class Main {
     System.out.println("unstifle_history: " + Readline.unstifle_history());
     Readline.stifle_history(100);
     System.out.println("history_is_stifled: " + Readline.history_is_stifled());
-    System.out.println("rl_completer_word_break_characters: '" + Readline.rl_completer_word_break_characters.getString(0) + "'");
+    System.out.println("rl_completer_word_break_characters: '" + Readline.getCompleterWordBreakCharacters() + "'");
 
     final AttemptedCompletionFunction completion = new AttemptedCompletionFunction(new CompletionCallback() {
       @Override
@@ -32,7 +29,7 @@ public class Main {
 
     System.out.println("read_history: " + Readline.read_history("readline-jna-history"));
     String line;
-    while ((line = Readline.readline("> ")) != null) {
+    while ((line = Readline.readLine("> ")) != null) {
       System.out.println(line);
       Readline.addHistory(line);
       System.out.println("history_base: " + Readline.getHistoryBase());
