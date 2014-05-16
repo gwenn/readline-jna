@@ -14,8 +14,8 @@ public class Readline {
 
   private static final NativeLibrary JNA_NATIVE_LIB;
   static {
-    Native.register(JNA_LIBRARY_NAME);
     JNA_NATIVE_LIB = NativeLibrary.getInstance(Readline.JNA_LIBRARY_NAME);
+    Native.register(JNA_NATIVE_LIB);
   }
 
   //public static native int rl_initialize();
@@ -55,7 +55,19 @@ public class Readline {
    * @return If readline encounters an EOF while reading the line, and the line is empty at that point, then NULL is returned.
    * Otherwise, the line is ended just as if a newline had been typed.
    */
-  public static native String readline(String prompt);
+  private static native Pointer readline(String prompt);
+
+  public static String readLine(String prompt) {
+    // https://groups.google.com/forum/#!msg/jna-users/Xy7Sm8Fb-Gc/CJ4DYo07NXEJ
+    // "If your native code returns ... allocated memory, then it is up to your Java code to clean it up in an appropriate manner"
+    final Pointer p = readline(prompt);
+    if (p == null) {
+      return null;
+    }
+    final String line = p.getString(0);
+    Native.free(Pointer.nativeValue(p));
+    return line;
+  }
   // static native void rl_resize_terminal(); // only for readline (not editline)
 
   private static Pointer history_length = JNA_NATIVE_LIB.getGlobalVariableAddress("history_length");
@@ -213,12 +225,20 @@ public class Readline {
    * <a href="http://cnswww.cns.cwru.edu/php/chet/readline/readline.html#SEC47">rl_completion_matches</a>
    */
   public static native Pointer rl_completion_matches(String text, CompletionCallback entryFunc);
-  static Pointer rl_completer_word_break_characters = JNA_NATIVE_LIB.getGlobalVariableAddress("rl_completer_word_break_characters"); // String
+
+  private static Pointer rl_completer_word_break_characters = JNA_NATIVE_LIB.getGlobalVariableAddress("rl_completer_word_break_characters"); // String
   /**
    * The list of characters that signal a break between words.
    * <a href="http://cnswww.cns.cwru.edu/php/chet/readline/readline.html#SEC48">rl_completer_word_break_characters</a>
    */
-  public void setCompleterWordBreakCharacters(String breaks) {
+  public static void setCompleterWordBreakCharacters(String breaks) {
     rl_completer_word_break_characters.setString(0, breaks);
+  }
+  /**
+   * The list of characters that signal a break between words.
+   * <a href="http://cnswww.cns.cwru.edu/php/chet/readline/readline.html#SEC48">rl_completer_word_break_characters</a>
+   */
+  public static String getCompleterWordBreakCharacters() {
+    return rl_completer_word_break_characters.getString(0);
   }
 }
