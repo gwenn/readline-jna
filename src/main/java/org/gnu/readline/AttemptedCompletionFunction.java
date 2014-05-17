@@ -4,6 +4,7 @@ import com.sun.jna.Callback;
 import com.sun.jna.Pointer;
 
 /**
+ * <a href="http://cnswww.cns.cwru.edu/php/chet/readline/readline.html#SEC48">rl_attempted_completion_over</a>
  * @see Readline#setAttemptedCompletionFunction(org.gnu.readline.AttemptedCompletionFunction)
  */
 public class AttemptedCompletionFunction implements Callback {

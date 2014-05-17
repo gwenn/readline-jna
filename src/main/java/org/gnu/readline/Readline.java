@@ -20,6 +20,18 @@ public class Readline {
 
   //public static native int rl_initialize();
 
+  private static Pointer rl_readline_name = JNA_NATIVE_LIB.getGlobalVariableAddress("rl_readline_name"); // string
+  /**
+   * This variable is set to a unique name by each application using Readline. The value allows conditional parsing of the inputrc file.
+   * <a href="http://cnswww.cns.cwru.edu/php/chet/readline/readline.html#SEC28">rl_readline_name</a>
+   */
+  public static void setReadlineName(String name) {
+    // TODO free old value ?
+    // Native.free(Pointer.nativeValue(rl_readline_name));
+    // TODO make a native copy of name?
+    rl_readline_name.setString(0, name);
+  }
+
   private static Pointer rl_line_buffer = JNA_NATIVE_LIB.getGlobalVariableAddress("rl_line_buffer");
   /**
    * This is the line gathered so far.
@@ -232,6 +244,9 @@ public class Readline {
    * <a href="http://cnswww.cns.cwru.edu/php/chet/readline/readline.html#SEC48">rl_completer_word_break_characters</a>
    */
   public static void setCompleterWordBreakCharacters(String breaks) {
+    // TODO free old value ?
+    // Native.free(Pointer.nativeValue(rl_completer_word_break_characters));
+    // TODO make a native copy of breaks?
     rl_completer_word_break_characters.setString(0, breaks);
   }
   /**

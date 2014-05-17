@@ -3,6 +3,7 @@ package org.gnu.readline;
 import com.sun.jna.Callback;
 
 /**
+ * <a href="http://cnswww.cns.cwru.edu/php/chet/readline/readline.html#SEC26">rl_compentry_func_t</a>
  * @see AttemptedCompletionFunction#AttemptedCompletionFunction(org.gnu.readline.CompletionCallback)
  */
 public abstract class CompletionCallback implements Callback {
